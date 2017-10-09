@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/GuavaTest/GuavaTest.iml" filepath="$PROJECT_DIR$/GuavaTest/GuavaTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/desinger-pattern-master-worker/desinger-pattern-master-worker.iml" filepath="$PROJECT_DIR$/desinger-pattern-master-worker/desinger-pattern-master-worker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jsonpathstudy/jsonpathstudy.iml" filepath="$PROJECT_DIR$/jsonpathstudy/jsonpathstudy.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mytest-project.iml" filepath="$PROJECT_DIR$/mytest-project.iml" />
+    </modules>
+  </component>
+</project>

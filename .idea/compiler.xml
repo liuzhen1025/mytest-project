@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="desinger-pattern-master-worker" />
+        <module name="jsonpathstudy" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="desinger-pattern-master-worker" target="1.5" />
+      <module name="jsonpathstudy" target="1.5" />
+      <module name="mytest-project" target="1.5" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
