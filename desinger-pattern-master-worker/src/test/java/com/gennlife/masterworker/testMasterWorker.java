@@ -2,6 +2,7 @@ package com.gennlife.masterworker;
 
 import com.gennlife.masterworker.worker.master.Master;
 import com.gennlife.math.OperatorEnum;
+import com.google.common.util.concurrent.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import java.util.Set;
@@ -51,6 +52,30 @@ public class testMasterWorker {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+    }
+    @Test
+    public void guavaListenableTest(){
+        ListeningExecutorService executorService = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(10));
+        task.add("task1");
+        task.add("task2");
+        task.add("task3");
+        task.add("task4");
+        task.add("task5");
+        task.add("task6");
+        task.add("task7");
+        task.add("task8");
+        task.add("task9");
+        task.add("task10");
+        Master master = new Master(task, resultMap, 2);
+        ListenableFuture< ConcurrentHashMap<String,Object>> future = executorService.submit(master);
+        Futures.addCallback(future, new FutureCallback< ConcurrentHashMap<String,Object>>() {
+            public void onSuccess( ConcurrentHashMap<String,Object> integer) {
+                System.out.println("result = "+integer);
+            }
+            public void onFailure(Throwable throwable) {
+
+            }
+        });
     }
     @Test
     public void executeTest(){
