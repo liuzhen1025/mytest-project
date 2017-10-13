@@ -2,9 +2,13 @@ package com.gennlift.json.path;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSONPath;
 import com.gennlift.common.ConditionFilter;
 import com.gennlift.common.XJsonPath;
+import com.jayway.jsonpath.Criteria;
+import com.jayway.jsonpath.Filter;
 import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.Predicate;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONStyle;
 import org.apache.commons.lang3.StringUtils;
@@ -28,18 +32,21 @@ public class JsonPathTest {
                 "      { \"类别\": \"reference\"," +
                 "        \"作者\": \"Nigel Rees\"," +
                 "        \"标题\": \"Sayings of the Century\"," +
-                "        \"价格\": 8.95" +
+                "        \"价格\": 8.95 ," +
+                "        \"date\": \"2016-10-13\""+
                 "      }," +
-                "      { \"类别\": \"fiction\"," +
+                "      { \"类别\": \"aaa\"," +
                 "        \"作者\": \"Nigel Rees\"," +
                 "        \"标题\": \"Sword of Honour\"," +
-                "        \"价格\": 12.99" +
+                "        \"价格\": 12.99 ," +
+                "        \"date\": \"2015-10-13\" "+
                 "      }," +
                 "      { \"类别\": \"fiction\"," +
                 "        \"作者\": \"Herman Melville\"," +
                 "        \"标题\": \"Moby Dick\"," +
                 "        \"SN码\": \"0-553-21311-3\"," +
-                "        \"价格\": 8.99" +
+                "        \"价格\": 8.99," +
+                "        \"date\": \"2016-10-13\""+
                 "      }," +
                 "      { \"类别\": \"fiction\"," +
                 "        \"作者\": \"J. R. R. Tolkien\"," +
@@ -54,8 +61,8 @@ public class JsonPathTest {
                 "    }" +
                 "  }" +
                 "}";
-        jsonObject = JSONObject.parseObject(jsonstr);
         System.out.println(jsonstr);
+        jsonObject = JSONObject.parseObject(jsonstr);
     }
 
     /**
@@ -67,7 +74,6 @@ public class JsonPathTest {
 
      //All things, both books and bicycles //authors3返回的是net.minidev.json.JSONArray：获取json中store下的所有value值，不包含key，如key有两个，book和bicycle
      List<Object> authors3 = JsonPath.read(json, "$.store.*");
-
 
      //The price of everything：获取json中store下所有price的值
      List<Object> authors4 = JsonPath.read(json, "$.store..price");
@@ -94,7 +100,7 @@ public class JsonPathTest {
      List<Object> authors11 = JsonPath.read(json, "$..book[?(@.isbn)]");
 
      //All books in store cheaper than 10：获取json中book数组中price<10的所有值
-     List<Object> authors12 = JsonPath.read(json, "$.store.book[?(@.price < 10)]");
+     List<Object> authors12 = JsonPath.read(json, "$.store.book[?(@.price < 10 )]");
 
      //All books in store that are not "expensive"：获取json中book数组中price<=expensive的所有值
      List<Object> authors13 = JsonPath.read(json, "$..book[?(@.price <= $['expensive'])]");
@@ -120,9 +126,27 @@ public class JsonPathTest {
     @Test
     public void testGetSomeOneKey(){
         Object read = JsonPath.read(jsonObject, "$..book[2]");
-        List<Object> authors14 = JsonPath.read(jsonObject, "$..书[?(@.author =~/.*Herman/.*)]");
+        List<Object> authors14 = JsonPath.read(jsonObject, "$..书[?(@.author =~/.*Herman/.* and )]");
+        List<Object> authors15 = JsonPath.read(jsonObject, "$..书[?(@.price < 10 && @.category == 'fiction')] , [?(@.category == 'reference' || @.price > 10)]");
+
         System.out.println(JsonPath.read(jsonObject, "$..书[?(@.price <= $['5']).max()]"));
         System.out.println(read);
+    }
+    @Test
+    public void testJsonPathFilter(){
+        List<String> categories = new ArrayList<String>();
+        categories.add("aaa");
+        categories.add("ference");
+        Filter filter = Filter.filter(Criteria.where("类别").contains("ference").and("date").gte("2016-10-13").and("date").lte("2017-10-13"))
+                .or(Criteria.where("作者").contains("Rees"));
+        //where 内可以是路径也可以是具体的某个属性
+        Filter filter1 = Filter.filter(Criteria.where("书[1].类别").contains("ference")).or(Criteria.where("书[1].作者").contains("Rees"));
+        Filter filter2 = Filter.filter(Criteria.where("书[1].date").gte("2016-10-13").and("书[1].date").lte("2017-10-13"));
+        List<Predicate> predicates = new ArrayList<Predicate>();
+        predicates.add(filter1);
+        predicates.add(filter2);
+        Object read = JsonPath.read(jsonObject, "$..[?,?]", filter1,filter2);
+        System.out.println("");
     }
     @Test
     public void autoAnalysis(){
